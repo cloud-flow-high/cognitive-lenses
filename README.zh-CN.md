@@ -2,7 +2,9 @@
 
 **Build lenses, not personas.**
 
-**不扮演思想家，蒸馏他们观察世界的镜片。**
+**充分蒸馏，选择性激活。**
+
+*从文本中蒸馏一种看法，再只把当前真正需要的部分带回对话。*
 
 Cognitive Lenses 是一个开放的认知视角蒸馏流程：从有限材料中提取稳定的问题意识与观察方式，再把它编译成可以在 AI 对话中调用的 Lens。
 
@@ -64,6 +66,12 @@ Cognitive Lenses 换成：
 
 > **“让这组文本暂时改变模型首先会看见什么。”**
 
+舞台可以保持不变。
+
+只换镜片。
+
+而什么东西突然变得重要，也会随之改变。
+
 ---
 
 ## 核心架构
@@ -74,25 +82,32 @@ flowchart LR
     B --> C["材料重建 Source Reconstruction"]
     C --> D["认知模式抽取"]
     D --> E["Lens Model"]
-    E --> F["Runtime Governance"]
+    E --> S["Selective Activation"]
+    S --> F["Runtime Governance"]
     F --> G["Conversation"]
 
-    H["Host / Orchestrator"] --> F
+    H["Host / Orchestrator"] --> S
     H --> I["换镜 / 叠镜 / 盲抽 / 造镜 / Eval"]
     I --> G
 ```
 
-流程：
+整条流程现在更准确地表示为：
 
-> **文本 → 稳定认知模式 → Lens → 对话**
+> **文本 → 认知模型 → 选择性激活 → 对话**
+
+真正关键的不只是“Lens 后台知道什么”和“前台怎么说”的区别。
+
+中间还有一层：
+
+> **这一轮到底应该让什么进入前台。**
 
 ---
 
-## Lens Model 与 Runtime 分离
+## 三层结构
 
 ```mermaid
 flowchart TB
-    subgraph MODEL["Lens Model｜后台认知结构"]
+    subgraph MODEL["Lens Model｜这副镜片能够看见什么"]
         M1["世界模型"]
         M2["优先注意力"]
         M3["因果语法"]
@@ -103,21 +118,57 @@ flowchart TB
         M8["理论边界"]
     end
 
-    subgraph RUNTIME["Lens Runtime｜对话治理"]
+    subgraph ACTIVE["Selective Activation｜这一轮什么值得变得显著"]
+        A1["生成候选认知节点"]
+        A2["按当前相关性排序"]
+        A3["激活一个主节点"]
+        A4["必要时补一个辅助节点"]
+        A5["抑制相关但非必要节点"]
+    end
+
+    subgraph RUNTIME["Lens Runtime｜怎样自然进入对话"]
         R1["保留分析对象"]
         R2["Scope Gate"]
-        R3["选择代表性切口"]
-        R4["保持单一主线"]
+        R3["保持单一主线"]
+        R4["自然语言表达"]
         R5["渐进披露"]
         R6["局部收束"]
     end
 
-    MODEL --> RUNTIME
+    MODEL --> ACTIVE --> RUNTIME
 ```
 
-核心原则：
+核心工程原则：
 
-> **后台可以很重，前台只需要让用户感觉自己真的换了一副镜片。**
+> **后台模型很丰富，不代表前台回答也应该很丰富。**
+
+一副 Lens 可能同时知道十个相关点，但当前这一轮也许只需要一个。
+
+> **Internal relevance ≠ current conversational relevance.**
+
+---
+
+## Selective Activation｜选择性激活
+
+选择性激活用来防止一种典型问题：**Corpus-to-Answer Leakage**。
+
+也就是：
+
+> 材料里有 → 后台知道 → 因为相关 → 全部塞进回答。
+
+真正成熟的 Lens 需要额外判断：
+
+1. 当前有哪些认知节点可能相关；
+2. 哪一个对当前问题最有解释力；
+3. 是否真的需要再激活一个辅助节点；
+4. 哪些东西虽然相关，但现在应该保持静默；
+5. 当前这一层什么时候已经讲够，可以停下来等用户继续。
+
+所以母版现在把原则正式写成：
+
+> **充分蒸馏，选择性激活。**
+
+详见 [`docs/SELECTIVE_ACTIVATION.md`](docs/SELECTIVE_ACTIVATION.md)。
 
 ---
 
@@ -139,70 +190,85 @@ flowchart TB
 2. 有大量文本支持的真实人物；
 3. 范围明确的单本书。
 
-虚构人物需要特别注意：
-
-短文本容易生成：
-
-> 性格标签 + 口吻模仿
-
-而不是认知镜片。
+虚构人物需要特别注意：短文本很容易退化成“性格标签 + 口吻模仿”，而不是认知镜片。
 
 ---
 
 ## 母版流程
 
 ### 1. Scope Freeze｜范围冻结
-
-明确这副镜片代表什么。
-
-一本书不能默认代表一个人的全部思想。
+明确这副镜片到底代表什么。
 
 ### 2. Source Reconstruction｜材料重建
-
-先恢复文本支持的内容，再生成运行规则。
+先恢复文本真正支持的内容，再生成认知结构。
 
 ### 3. Cognitive Pattern Extraction｜认知模式抽取
-
-抽取：
-
-- 世界模型；
-- 注意力；
-- 因果语法；
-- 问题生成方式；
-- 价值优先级；
-- 证据偏好；
-- 怀疑模式；
-- 适用范围；
-- 理论边界。
+抽取世界模型、注意力、因果语法、问题生成方式、价值优先级、证据偏好、怀疑模式、适用范围和理论边界。
 
 ### 4. Lens Model
+形成完整的后台认知结构。
 
-形成内部认知结构。
+### 5. Selective Activation
+根据当前问题对后台认知节点重新排序，只激活现在真正有解释力的部分。
 
-### 5. Runtime Governance
+### 6. Runtime Governance
+把被激活的部分自然地带进对话，同时控制 Scope、单一主线和渐进披露。
 
-转换成对话中的镜片。
+### 7. Lens Package
+输出为 Skill 或其他可复用格式。
 
-规则：
+---
 
-- 保留用户原始对象；
-- 不因为知道更多就全部输出；
-- 先选择代表性切口；
+## Runtime 原则
+
+成功的 Lens 应该让人产生：
+
+> **“它怎么总会注意到一些我原来没注意的问题？”**
+
+而不是：
+
+> **“我打开了一份理论讲义。”**
+
+因此母版固定：
+
+- 保留用户原始分析对象；
+- Broad object ≠ exhaustive answer；
+- Internal relevance ≠ current conversational relevance；
+- 一次优先一个代表性切口；
 - 一次保持一条分析主线；
 - 渐进披露；
-- 不泄露后台 Harness。
+- 不泄露后台 Harness；
+- Lens 不评价自己；
+- Lens 不主动替宿主切换其他 Lens。
 
-### 6. Lens Package
+---
 
-输出为 Skill 或其他可复用格式。
+## Host 和 Lens 分工
+
+### Lens 负责
+
+> **用当前视角观察当前对象。**
+
+### Host / Orchestrator 可以负责
+
+- 选镜片；
+- 换镜片；
+- 多镜片对照；
+- Lens Stack；
+- 随机抽镜片；
+- Demo；
+- Eval；
+- 材料载入；
+- Lens Forge；
+- 自动路由。
+
+Host 也可以影响激活策略，但单个 Lens 仍应保持范围明确、干净、可组合。
 
 ---
 
 ## 趣味玩法
 
-玩法属于 Host 层，而不是污染 Lens 本身。
-
-包括：
+玩法属于 Host 层，包括：
 
 - Single Lens｜单镜
 - Lens Swap｜换镜
@@ -213,6 +279,7 @@ flowchart TB
 - Book Lens｜单书镜片
 - Thinker Lens｜人物镜片
 - School Lens｜学派镜片
+- Personal Lens｜个人认知镜片（实验）
 
 ---
 
@@ -220,15 +287,7 @@ flowchart TB
 
 欢迎 Fork。
 
-适合方向：
-
-- 修改 source scope；
-- 制作更窄的书籍镜片；
-- 制作时期版本；
-- 修改 Runtime；
-- 移植其他 AI 平台；
-- 增加 Eval；
-- 制作镜片管理器。
+适合方向包括修改 source scope、制作书籍或时期版本、实验不同 Selective Activation 策略、修改 Runtime、移植其他 AI 平台、增加 Eval、制作镜片管理器或可视化镜廊。
 
 发布 Fork 时，请说明材料范围。
 
@@ -236,15 +295,34 @@ flowchart TB
 
 ---
 
+## 仓库结构
+
+```text
+cognitive-lenses/
+├── README.md
+├── README.zh-CN.md
+├── LICENSE
+├── CONTRIBUTING.md
+├── template/
+│   └── cognitive-lens-template/
+│       └── SKILL.md
+└── docs/
+    ├── ARCHITECTURE.md
+    ├── SELECTIVE_ACTIVATION.md
+    ├── ORIGIN.md
+    ├── REFERENCES.md
+    ├── FORKING.md
+    └── PLAY_MODES.md
+```
+
+首版仍然故意不放大量具体 Lens 案例。
+
+先把母版架构、激活机制、流程、参考依据和 Fork 方式做干净。
+
+---
+
 ## 第一版原则
 
-首版故意不放大量案例。
+Cognitive Lenses 是一个实验性的 AI 工程工作流，不是已经建立的学术标准。
 
-先公开：
-
-- 母版架构；
-- 流程；
-- 参考依据；
-- Fork 方式。
-
-目标是建立一个干净、可组合的认知镜片实验框架。
+其中 **Lens Model / Selective Activation / Runtime** 三层分离，是从样机迭代中形成的项目级工程约定。
