@@ -2,7 +2,9 @@
 
 **Build lenses, not personas.**
 
-*Distill a way of seeing from text, then bring it back into conversation.*
+**Distill broadly. Activate selectively.**
+
+*Distill a way of seeing from text, then bring only the relevant part back into conversation.*
 
 Cognitive Lenses is an open workflow for distilling a limited source set into a reusable AI perspective.
 
@@ -50,8 +52,6 @@ It is to use a limited, explicit source set to recover a **source-scoped cogniti
 - what it treats as evidence;
 - what kinds of explanations it distrusts.
 
-The inspiration comes from wanting a more direct relationship with ideas themselves.
-
 A book, a thinker, a school, or a theoretical tradition can leave behind more than propositions to memorize. Across enough text, it may also leave traces of a recurring **way of seeing**.
 
 Cognitive Lenses tries to distill those traces into something conversational.
@@ -70,8 +70,6 @@ It is a new conversational object:
 
 > **a source-scoped lens distilled from text.**
 
-That means the same question can be revisited through different lenses without changing the underlying object.
-
 The stage stays still.
 
 The lens changes.
@@ -80,7 +78,7 @@ And what counts as important may change with it.
 
 ---
 
-## From text to a conversational lens
+## Core architecture
 
 ```mermaid
 flowchart LR
@@ -88,23 +86,32 @@ flowchart LR
     B --> C["Source Reconstruction"]
     C --> D["Cognitive Pattern Extraction"]
     D --> E["Lens Model"]
-    E --> F["Runtime Governance"]
+    E --> S["Selective Activation"]
+    S --> F["Runtime Governance"]
     F --> G["Conversation"]
 
-    H["Host / Orchestrator"] --> F
+    H["Host / Orchestrator"] --> S
     H --> I["Swap / Stack / Blind Draw / Forge / Eval"]
     I --> G
 ```
 
 The pipeline can be read as:
 
-> **Text → recurring cognitive patterns → Lens → conversation**
+> **Text → cognitive model → selective activation → conversation**
 
-The key separation is between **what the Lens knows internally** and **what the conversation needs right now**.
+The key architectural distinction is no longer only between an internal model and visible runtime.
+
+There is an explicit layer in between:
+
+> **Selective Activation decides what deserves to become active now.**
+
+---
+
+## Three layers
 
 ```mermaid
 flowchart TB
-    subgraph MODEL["Lens Model — internal cognitive structure"]
+    subgraph MODEL["Lens Model — what the lens can notice"]
         M1["World Model"]
         M2["Primary Attention"]
         M3["Causal Grammar"]
@@ -115,19 +122,55 @@ flowchart TB
         M8["Limits"]
     end
 
-    subgraph RUNTIME["Lens Runtime — conversational governance"]
+    subgraph ACTIVE["Selective Activation — what becomes salient now"]
+        A1["Generate Candidate Nodes"]
+        A2["Rank by Current Relevance"]
+        A3["Activate One Primary Node"]
+        A4["Optionally Add One Supporting Node"]
+        A5["Suppress Relevant-but-Nonessential Nodes"]
+    end
+
+    subgraph RUNTIME["Lens Runtime — how it enters conversation"]
         R1["Preserve Analytical Object"]
         R2["Scope Gate"]
-        R3["Select Representative Topic"]
-        R4["One Analytical Thread"]
+        R3["One Analytical Thread"]
+        R4["Natural Language"]
         R5["Progressive Disclosure"]
         R6["Local Closure"]
     end
 
-    MODEL --> RUNTIME
+    MODEL --> ACTIVE --> RUNTIME
 ```
 
-> **The internal model may be rich. The visible conversation should remain selective.**
+This leads to the central engineering principle:
+
+> **A rich internal model should not become a rich answer by default.**
+
+A Lens may know ten relevant things. The current turn may need one.
+
+> **Internal relevance ≠ current conversational relevance.**
+
+---
+
+## Selective Activation
+
+Selective Activation is the main guard against **corpus-to-answer leakage**: the tendency for everything found in the source or internal model to spill into the answer simply because it is relevant.
+
+Its job is to decide:
+
+1. what cognitive nodes are potentially relevant;
+2. which one has the highest explanatory value for this turn;
+3. whether one supporting node is necessary;
+4. what should remain silent even though it is related;
+5. when to stop and wait for the next turn.
+
+In short:
+
+> **Distill broadly. Activate selectively.**
+
+See [`docs/SELECTIVE_ACTIVATION.md`](docs/SELECTIVE_ACTIVATION.md).
+
+---
 
 ## What can become a Lens?
 
@@ -168,27 +211,18 @@ A lens built from one book should not silently claim to represent an entire thin
 Recover what the sources actually support before inventing runtime behavior.
 
 ### 3. Cognitive Pattern Extraction
-Extract recurring patterns such as:
-
-- ontology / world model;
-- attention;
-- causal grammar;
-- question generation;
-- value priorities;
-- evidence preferences;
-- suspicion patterns;
-- applicability;
-- theoretical limits.
+Extract recurring patterns such as ontology, attention, causal grammar, question generation, value priorities, evidence preferences, suspicion patterns, applicability, and theoretical limits.
 
 ### 4. Lens Model
 Store the distilled cognitive structure as the internal model.
 
-### 5. Runtime Governance
-Convert the model into a conversational lens.
+### 5. Selective Activation
+Rank the internally available cognitive nodes against the current question and activate only what is useful now.
 
-Runtime should preserve the user's object, control scope, select one representative issue, stay on one thread, and disclose depth progressively.
+### 6. Runtime Governance
+Turn the activated material into a natural conversation while preserving scope and one analytical thread.
 
-### 6. Lens Package
+### 7. Lens Package
 Package the result into a reusable Skill or another compatible instruction format.
 
 ---
@@ -221,23 +255,13 @@ The most important runtime rules are:
 
 The Lens itself should remain narrow.
 
-The **Host / Orchestrator** may provide:
-
-- lens selection;
-- lens switching;
-- lens stacking;
-- multi-lens comparison;
-- demo mode;
-- evaluation mode;
-- random lens draws;
-- source loading;
-- routing.
+The **Host / Orchestrator** may provide lens selection, switching, stacking, comparison, demo mode, evaluation mode, blind draws, source loading, routing, and Lens Forge workflows.
 
 The **Lens** should mainly provide:
 
 > a stable way of looking at the current object.
 
-This separation keeps individual lenses composable.
+The Host may influence activation strategy, but the Lens should remain composable and source-scoped.
 
 ---
 
@@ -266,18 +290,7 @@ These are **host-level play patterns**. They should not be hard-coded into every
 
 Forks are encouraged.
 
-Useful fork directions include:
-
-- changing the source scope;
-- creating a narrower book-specific lens;
-- creating a later-period / earlier-period thinker lens;
-- changing runtime pacing;
-- experimenting with another AI platform;
-- adding an evaluator;
-- building a visual lens library;
-- creating a lens-routing host;
-- translating the mother template;
-- testing alternative distillation schemas.
+Useful fork directions include changing source scope, creating book-specific or period-specific lenses, experimenting with activation policies, changing runtime pacing, moving to another AI platform, adding evaluators, building visual lens libraries, or creating lens-routing hosts.
 
 Please preserve source scope clearly when publishing a fork.
 
@@ -298,6 +311,7 @@ cognitive-lenses/
 │       └── SKILL.md
 └── docs/
     ├── ARCHITECTURE.md
+    ├── SELECTIVE_ACTIVATION.md
     ├── ORIGIN.md
     ├── REFERENCES.md
     ├── FORKING.md
@@ -314,13 +328,9 @@ The goal is to publish a clean architecture and a forkable mother template first
 
 This project is an experimental engineering workflow, not an established academic standard.
 
-Its design is informed by several adjacent ideas:
+Its design is informed by reusable AI workflows, problem framing, epistemological framing, source-grounded interpretation, and versioned open-source workflows.
 
-- reusable AI Skills / portable instruction workflows;
-- problem framing and epistemological framing;
-- source-grounded interpretation;
-- separation between internal model and conversational runtime;
-- versioned, forkable open-source workflows.
+The specific architecture — including **Lens Model / Selective Activation / Runtime** separation — is a project-level engineering convention developed through prototype iteration.
 
 See [`docs/REFERENCES.md`](docs/REFERENCES.md).
 
