@@ -33,17 +33,23 @@ https://arxiv.org/abs/2606.05983
 
 ## Project-specific synthesis
 
-The following ideas are project design decisions developed through prototype iteration rather than claims taken directly from the references above:
+The following ideas are **project-level engineering conventions developed through prototype iteration**, rather than claims taken directly from the references above:
 
-- Lens Model / Lens Runtime separation;
+- source-scoped Lens identity;
+- Source Reconstruction before Lens extraction;
+- Lens Model / Selective Activation / Runtime separation;
+- Selective Activation as an explicit relevance policy;
+- `Distill broadly. Activate selectively.`;
+- corpus-to-answer leakage as a runtime failure mode;
 - Scope Gate;
-- Representative-topic selection;
-- Progressive disclosure;
+- Broad object ≠ exhaustive answer;
 - Internal relevance ≠ current conversational relevance;
+- one-primary-node default activation;
+- suppression of relevant-but-nonessential nodes;
+- progressive disclosure and per-turn reactivation;
 - Host / Lens responsibility separation;
 - no self-evaluation;
 - no automatic cross-lens routing;
-- source-scoped lens identity;
 - forkable cognitive-perspective packages.
 
-These should be treated as engineering conventions of this project.
+These conventions should be evaluated as engineering choices: by stability, source fidelity, distinctiveness, generalization, activation quality, scope control, and conversational usefulness.
