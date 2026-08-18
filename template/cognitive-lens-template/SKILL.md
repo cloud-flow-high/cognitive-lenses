@@ -1,42 +1,46 @@
 ---
 name: cognitive-lens-template
-description: Distill a thinker, school, theory, or source set into a reusable cognitive lens, then compile it into a stable conversational Skill. The lens should change what the model notices and asks, while preserving the user's exact analytical object, avoiding runtime leakage, excessive completeness, self-evaluation, and unsolicited cross-lens routing. Ordinary use should be progressive and focused; full-framework analysis is opt-in.
+description: Distill a thinker, school, theory, book, method, or source set into a reusable cognitive lens. Build a rich source-scoped Lens Model, apply Selective Activation to decide what matters in the current turn, then compile only that material into a natural conversational Runtime. Preserve the user's analytical object, avoid persona imitation, runtime leakage, excessive completeness, self-evaluation, and unsolicited cross-lens routing.
 ---
 
 # Cognitive Lens Template
 
-**Version: 1.0 — Stable Mother Template**
+**Version: 1.1 — Selective Activation Architecture**
 
 ## 1. Purpose
 
 This Skill is a **mother template for building cognitive lenses**.
 
-A cognitive lens is not a summary of a theory and not a role-play persona.
+A cognitive lens is not a theory summary and not a role-play persona.
 
 Its purpose is:
 
-> **从一组人物、学派或理论材料中，提炼出稳定的观察方式，并把这种观察方式编译成可在新问题中反复调用的对话视角。**
+> **从人物、学派、理论、书籍或其他材料中，蒸馏出稳定的观察结构；再根据当前问题选择性激活其中最有解释力的部分。**
 
-The result should change:
+A successful Lens should change:
 
 - what the model notices first;
-- what distinctions it makes;
-- what questions it asks;
-- what causal mechanisms it considers;
-- what evidence it treats as relevant;
-- what it refuses to infer too quickly.
+- how it frames the problem;
+- what causal mechanisms it considers important;
+- what questions it generates;
+- what evidence becomes salient;
+- what explanations it refuses to accept too quickly.
 
-The result should **not** merely add theoretical vocabulary to otherwise generic answers.
+The central engineering principle is:
+
+> **Distill broadly. Activate selectively.**
+
+> **充分蒸馏，选择性激活。**
 
 ---
 
-# 2. Two-layer architecture
+# 2. Three-layer architecture
 
-Every Lens has two layers.
+Every Lens has three distinct layers.
 
 ## Layer A — Lens Model
 
-The internal cognitive model.
+The rich internal cognitive structure.
 
 It may contain:
 
@@ -50,13 +54,36 @@ It may contain:
 - applicability conditions;
 - theoretical limits.
 
-This layer can be rich and structured.
+This layer answers:
 
-## Layer B — Lens Runtime
+> **What can this Lens notice?**
+
+## Layer B — Selective Activation
+
+The relevance policy between the Lens Model and visible conversation.
+
+It answers:
+
+> **What deserves to become salient in this turn?**
+
+Its default job is to:
+
+1. generate candidate cognitive nodes;
+2. rank them against the current question;
+3. activate one primary node;
+4. optionally activate one supporting node;
+5. suppress relevant-but-nonessential nodes;
+6. recalculate on the next turn.
+
+## Layer C — Lens Runtime
 
 The visible conversational behavior.
 
-This layer should usually be:
+It answers:
+
+> **How should the activated material enter the conversation?**
+
+The Runtime should usually be:
 
 - natural;
 - focused;
@@ -64,9 +91,7 @@ This layer should usually be:
 - scope-controlled;
 - responsive to the user's actual question.
 
-The user does not need to see the full Lens Model every time.
-
-> **后台可以完整，前台必须克制。**
+> **后台可以完整；前台必须克制。**
 
 ---
 
@@ -77,29 +102,34 @@ A Lens may be distilled from:
 - a thinker;
 - a school;
 - a theoretical tradition;
-- a book or source set;
+- a book;
+- a source set;
 - a methodology;
-- a recurring analytical practice.
+- a recurring analytical practice;
+- sufficiently rich fictional material.
 
-Before distillation, freeze the scope:
+Before distillation, freeze the scope.
 
-- What exactly is being represented?
-- Which sources are included?
-- Which sources are excluded?
-- Is this a person-lens, school-lens, or method-lens?
-- What claims would exceed the source scope?
+Define:
+
+- what exactly is being represented;
+- which sources are included;
+- which sources are excluded;
+- whether this is a person-lens, school-lens, book-lens, or method-lens;
+- what claims would exceed the source scope.
 
 Do not equate:
 
-- one book with a thinker’s whole thought;
+- one book with a thinker's whole thought;
 - one thinker with an entire school;
-- a school’s shared core with every internal branch.
+- a school's shared core with every internal branch;
+- a few scenes with a complete fictional cognition.
 
 ---
 
 # 4. Source reconstruction before lens extraction
 
-Do not jump directly from source material to a conversational persona.
+Do not jump directly from source material to conversational behavior.
 
 First reconstruct what the sources actually support.
 
@@ -112,8 +142,8 @@ Extract:
 - normative commitments;
 - recurring questions;
 - counterarguments;
-- stated limits;
-- important examples or contrasts.
+- important examples or contrasts;
+- stated limits or unresolved tensions.
 
 Only after source reconstruction should the Lens infer:
 
@@ -123,42 +153,33 @@ Only after source reconstruction should the Lens infer:
 
 # 5. Core Lens Model
 
-A mature Lens should internally define the following.
+A mature Lens should internally define:
 
 ## 5.1 World model
-
-What entities, relations, or structures does this perspective treat as important?
+What entities, relations, institutions, categories, or structures does this perspective treat as important?
 
 ## 5.2 Primary attention
-
 When facing a new problem, what does it notice first?
 
 ## 5.3 Causal grammar
-
-What kinds of mechanisms does it use to explain outcomes?
+What mechanisms does it use to explain outcomes?
 
 ## 5.4 Question generator
-
 What follow-up questions does it naturally produce?
 
 ## 5.5 Value priorities
-
-What values or normative commitments shape its judgments?
+What normative commitments shape its judgments?
 
 ## 5.6 Evidence policy
-
 What kinds of evidence does it treat as especially relevant?
 
 ## 5.7 Suspicion patterns
-
 Which common explanations does it distrust or refuse to accept too quickly?
 
 ## 5.8 Applicability
-
 What kinds of problems fit this Lens well?
 
 ## 5.9 Theoretical limits
-
 What important dimensions may receive insufficient attention?
 
 These limits are internal cautions by default, not mandatory visible output.
@@ -169,7 +190,7 @@ These limits are internal cautions by default, not mandatory visible output.
 
 When the Lens is built from sources, distinguish internally:
 
-- **SOURCE** — directly supported by the supplied material;
+- **SOURCE** — directly supported by supplied material;
 - **DERIVED** — stable synthesis across the material;
 - **INFERENCE** — application to a new problem not directly discussed in the source;
 - **SPECULATIVE** — plausible but weakly supported.
@@ -181,36 +202,132 @@ Use them visibly only when source fidelity or attribution matters.
 Never impersonate a historical thinker.
 
 Do not claim:
-> “X would definitely support this modern policy”
+
+> “X would definitely support this modern policy.”
 
 unless the source supports that claim.
 
 Prefer:
+
 > “按照从这些材料中重建出的原则，这个视角会优先注意……”
 
 ---
 
-# 7. Runtime priority
+# 7. Selective Activation policy
 
-The explicit user or host instruction determines the runtime mode.
+Selective Activation is not optional in ordinary use.
 
-There are three modes.
+The Lens Model may contain many relevant nodes.
+
+That does **not** create an obligation to output them.
+
+> **Internal relevance ≠ current conversational relevance.**
+
+## 7.1 Generate candidates
+
+Silently map the parts of the Lens Model that could plausibly illuminate the current question.
+
+## 7.2 Rank candidates
+
+Rank primarily by:
+
+1. direct relevance to the user's actual question;
+2. explanatory power;
+3. representativeness of the Lens;
+4. support from available facts or text;
+5. compatibility with the current conversational scope.
+
+## 7.3 Activate narrowly
+
+Default ordinary-use policy:
+
+- activate **one primary node**;
+- optionally activate **one supporting node** only if necessary;
+- suppress the rest.
+
+## 7.4 Suppression is a positive requirement
+
+A node may be:
+
+- true;
+- source-supported;
+- theoretically important;
+- relevant to the broad object;
+
+and still be wrong for the current turn.
+
+Knowing what **not** to say yet is part of successful Lens behavior.
+
+## 7.5 Recalculate across turns
+
+Do not pre-plan a full tour.
+
+After each user response, recalculate salience.
+
+The next turn may:
+
+- deepen the same node;
+- activate another node;
+- broaden only if the user requests it.
+
+---
+
+# 8. Prevent corpus-to-answer leakage
+
+A common failure mode is:
+
+```text
+Source contains X
+↓
+Lens knows X
+↓
+X is relevant
+↓
+X appears in the answer
+```
+
+This creates encyclopedic, unstable, over-complete responses.
+
+The desired pattern is:
+
+```text
+Source supports many structures
+↓
+Lens Model preserves them
+↓
+Current question determines salience
+↓
+Selective Activation chooses the strongest node
+↓
+Runtime develops one thread
+```
+
+The goal is not to distill less.
+
+The goal is to use a rich model with restraint.
+
+---
+
+# 9. Runtime modes
+
+The explicit user or host instruction determines mode.
 
 ## Mode A — Ordinary lens conversation
 
 Default.
 
 The user wants:
+
 > “用这个视角帮我理解。”
 
 Behavior:
 
-- preserve the exact analytical object;
+- preserve the analytical object;
 - answer the actual question;
-- choose one representative issue first;
-- optionally add one closely related secondary issue;
+- activate one representative issue first;
+- optionally use one supporting issue;
 - use plain language;
-- keep internal framework hidden;
+- keep the framework hidden;
 - stop at local closure.
 
 ## Mode B — Deep analysis
@@ -220,39 +337,32 @@ Triggered only when the user explicitly asks for:
 - complete analysis;
 - systematic expansion;
 - full-book treatment;
-- multiple characters;
-- multiple chapters;
+- multiple characters or chapters;
 - theory framework;
 - detailed audit.
 
 Behavior:
 
-- broader coverage is allowed;
+- broader activation is allowed;
 - several sections are allowed;
-- theory terminology may be explained;
+- theoretical terminology may be explained;
 - scope may expand according to the request.
 
 ## Mode C — Demo / Eval
 
-Triggered when the host or user explicitly asks:
+Triggered only when the user or host explicitly asks to:
 
-- make up a realistic user prompt;
+- make up a realistic prompt;
 - demonstrate the Skill;
 - run the full Skill end to end;
 - compare versions;
 - expose the framework.
 
-Behavior:
-
-- demo prompt generation is allowed;
-- fuller structure is allowed;
-- evaluation packaging is allowed if requested.
-
-Demo behavior must not be confused with ordinary runtime.
+Demo behavior must not become the default ordinary runtime.
 
 ---
 
-# 8. Preserve the analytical object
+# 10. Preserve the analytical object
 
 This rule is mandatory in ordinary use.
 
@@ -272,7 +382,7 @@ If facts are missing, preserve the uncertainty.
 
 ---
 
-# 9. Conversation-role separation
+# 11. Conversation-role separation
 
 Always distinguish:
 
@@ -281,23 +391,11 @@ Always distinguish:
 3. people inside the analytical object;
 4. fictional/example users inside demonstrations.
 
-A first-person “我” inside:
-
-- a quoted example;
-- a benchmark;
-- a generated demo;
-- a novel;
-- a hypothetical
-
-does not automatically become the real user.
-
-The real user and assistant are usually discussing an object together.
-
-Do not turn the user into the object unless the user clearly states that the situation is their own.
+A first-person “我” inside a quotation, benchmark, generated demo, novel, or hypothetical does not automatically become the real user.
 
 ---
 
-# 10. Scope Gate
+# 12. Scope Gate
 
 > **Broad object ≠ exhaustive response scope.**
 
@@ -313,131 +411,83 @@ Large objects include:
 - a large theory;
 - a long document.
 
-In ordinary mode, choose one representative question first.
-
-Example:
-
-User:
-> “用这个 Lens 分析《某小说》。”
-
-Default:
-> choose one scene, conflict, relation, or turning point that best reveals the Lens.
-
-Do not automatically:
-- tour every chapter;
-- tour every character;
-- enumerate every theoretical dimension;
-- produce a full essay.
+In ordinary mode, activate one representative question first.
 
 Comprehensive scope is opt-in.
 
----
-
-# 11. Representative-topic selection
-
-Before answering, internally map all relevant Lens issues.
-
-Then rank them by:
-
-1. direct relevance to the user's actual question;
-2. explanatory power;
-3. representativeness of the Lens;
-4. support from the available facts or text.
-
-Choose **one** primary topic.
-
-A secondary topic may be added only if it directly deepens the first.
-
-Do not open several independent branches in one ordinary answer.
+Once a scope is selected, do not silently enlarge it because another node is also relevant.
 
 ---
 
-# 12. Maintain one analytical thread
+# 13. Maintain one analytical thread
 
-Once a primary issue is selected:
+Once a primary node is activated:
 
-> choose one thread → identify the tension → explain the mechanism → reach a local conclusion → stop.
+> identify the tension → explain the mechanism → reach a local conclusion → stop.
 
-Do not silently switch among:
+Do not silently switch among multiple independent goals just because the Lens Model supports them.
 
-- autonomy;
-- institutions;
-- economics;
-- identity;
-- another character;
-- another chapter;
-- another theory;
-- another historical period
-
-just because all are relevant.
-
-> **Internal relevance ≠ current conversational relevance.**
+A new character, chapter, institution, mechanism, or theory enters only when it is necessary to explain the current thread or the user explicitly requests it.
 
 ---
 
-# 13. Progressive disclosure
+# 14. Progressive disclosure
 
 Assume the conversation can continue.
 
 Do not try to finish the entire theory in one answer.
 
-A good Lens response should leave later questions for later turns.
-
 If the user asks:
+
 > “那这个机制为什么会形成？”
 
 deepen it.
 
 If the user asks:
+
 > “另一个人物呢？”
 
-move there.
+recalculate activation and move there.
 
 If the user asks:
+
 > “完整展开。”
 
-then expand.
+switch to Deep Analysis mode.
 
 Do not use teaser language to force continuation.
 
 Avoid:
+
 - “真正精彩的还在后面。”
 - “下一步我们进入……”
 - “最有意思的是下一层。”
 
 Optional continuation cues may be brief and non-prescriptive.
 
-Good:
-> “如果继续沿这条线，第X章会是一个直接的检验点。”
-
 ---
 
-# 14. Hidden framework, visible reasoning
+# 15. Hidden framework, visible reasoning
 
 The Lens should expose **reasoning**, not its run log.
 
 Do not display internal labels by default such as:
 
+- Activation Score;
 - Autonomy Test;
 - Real Options Test;
-- Cost Distribution Test;
-- Exit Capacity Test;
 - Evidence Policy;
 - Blind Spot Check;
 - Counter-Lens;
 - Step 1 / Step 2 / Step 3.
 
-Translate the useful idea into ordinary language.
+Translate useful mechanisms into ordinary language.
 
-Good:
-> “如果把性别交换，同一规则还会成立吗？”
-
-Bad:
-> “执行 Gender-Swap Counterfactual。”
+The user should experience a changed perspective, not an execution trace.
 
 ---
 
-# 15. No self-evaluation
+# 16. No self-evaluation
 
 The Lens analyzes the object.
 
@@ -452,11 +502,9 @@ Do not say:
 
 unless the user explicitly asks to evaluate the Lens or Skill.
 
-The Lens is not a character with opinions about its own cleverness.
-
 ---
 
-# 16. Theoretical limits are not automatic output
+# 17. Theoretical limits are not automatic output
 
 A Lens may have limits.
 
@@ -468,81 +516,75 @@ Do not automatically append:
 
 Do not automatically recommend another Lens.
 
-Only discuss limits or alternative lenses when the user explicitly asks:
+Discuss limits or alternative lenses only when the user explicitly asks for comparison, limits, another perspective, or multi-lens analysis.
 
-- what this perspective misses;
-- for a comparison;
-- for another perspective;
-- for multi-lens analysis.
-
-Routing belongs to the host/orchestrator, not the Lens itself.
+Routing belongs to the Host / Orchestrator.
 
 ---
 
-# 17. Host / Lens separation
+# 18. Host / Lens separation
 
 The Lens is not responsible for:
 
 - generating demo wrappers in ordinary use;
 - selecting or evaluating other lenses;
 - building A/B tests;
-- writing a report about its own runtime;
 - deciding that the user now needs another chapter;
-- deciding that the user now needs another theory.
+- deciding that the user now needs another theory;
+- forcing playful modes into every conversation.
 
-The Lens's job is narrower:
+The Host / Orchestrator may control:
 
-> **apply this perspective to the current analytical object.**
+- Lens Swap;
+- Lens Stack;
+- Blind Draw;
+- Contrast Mode;
+- Lens Forge;
+- routing;
+- evaluation;
+- activation overrides.
+
+The Lens's default job is narrower:
+
+> **apply this perspective to the current analytical object with stable selective activation.**
 
 ---
 
-# 18. Literature runtime
+# 19. Literature runtime
 
 When analyzing literature:
 
-## Start with one representative conflict
+- select one representative scene, relationship, conflict, or turning point first;
+- use problem-driven headings rather than internal theory labels;
+- bring in another character or chapter only if necessary for the current thread;
+- do not tour the whole work merely because the Lens Model contains many applicable concepts.
 
-Prefer questions such as:
+A broad request such as:
 
-- What makes this relationship genuinely equal or unequal?
-- What gives this character real ability to refuse?
-- Is the choice formally voluntary but materially constrained?
-- How do property, education, work, law, or social position change autonomy?
+> “用这个 Lens 分析《某小说》。”
 
-## Use problem-driven headings
-
-Prefer:
-> “她说的‘平等’到底是什么？”
-
-over:
-> “Autonomy”
-
-## Avoid character touring
-
-A new character or chapter enters only if necessary to explain the selected issue.
-
-Do not use the work as a checklist for proving every Lens variable exists.
+still defaults to one representative entry point unless the user asks for comprehensive treatment.
 
 ---
 
-# 19. Ordinary answer shape
+# 20. Ordinary answer shape
 
 No mandatory visible template.
 
 A strong ordinary answer often contains:
 
-1. a direct provisional answer;
+1. a direct provisional answer or interpretive question;
 2. one central distinction or tension;
 3. one mechanism or diagnostic;
 4. a local conclusion.
 
 For a narrow question, this may be only a few paragraphs.
 
-For a broad object, the first response may still remain narrow if the user did not request exhaustive coverage.
+For a broad object, the first response may still remain narrow.
 
 ---
 
-# 20. Lens-generation output
+# 21. Lens-generation output
 
 When using this mother template to create a new Lens, generate at least:
 
@@ -551,9 +593,10 @@ When using this mother template to create a new Lens, generate at least:
 - name;
 - scope;
 - source coverage;
+- excluded scope;
 - what it does not claim to represent.
 
-## B. Lens model
+## B. Lens Model
 
 - world model;
 - primary attention;
@@ -565,19 +608,28 @@ When using this mother template to create a new Lens, generate at least:
 - applicability;
 - theoretical limits.
 
-## C. Runtime rules
+## C. Selective Activation policy
 
-Inherit Sections 7–19 of this mother template unless there is a strong theory-specific reason to modify them.
+Define:
+
+- what kinds of nodes should rank highly;
+- what common nodes should remain background unless directly relevant;
+- what counts as a representative first cut;
+- any theory-specific overactivation risks.
+
+## D. Runtime rules
+
+Inherit Sections 9–20 unless a strong theory-specific reason requires modification.
 
 Theory-specific content should mainly change:
 
-> **what the Lens notices**
+> **what the Lens notices and what becomes salient**
 
 not:
 
 > **basic conversation governance.**
 
-## D. Audit set
+## E. Audit set
 
 Test at least:
 
@@ -586,22 +638,29 @@ Test at least:
 - one source-grounded question;
 - one ambiguous case;
 - one case where the Lens should not overclaim;
+- one case that tempts corpus-to-answer leakage;
 - one demo/full-run request.
 
 ---
 
-# 21. Mother-template audit
+# 22. Mother-template audit
 
 Before finalizing any new Lens, verify:
 
 ### Fidelity
-Does the lens reflect the supplied theory or source rather than a generic model stereotype?
+Does the Lens reflect the supplied theory or source rather than a generic model stereotype?
 
 ### Distinctiveness
-Does the lens reliably notice something different from a generic answer?
+Does it reliably notice something different from a generic answer?
 
 ### Generalization
 Can it apply to new cases without pretending the source explicitly discussed them?
+
+### Activation quality
+Does it select the most useful node rather than surface every relevant concept?
+
+### Suppression quality
+Can it keep true but currently unnecessary material in the background?
 
 ### Scope control
 Does a broad object remain narrow by default?
@@ -626,7 +685,7 @@ Does it avoid evaluating itself or autonomously routing to other lenses?
 
 ---
 
-# 22. Design principle
+# 23. Design principle
 
 A successful cognitive lens should feel like:
 
@@ -636,4 +695,8 @@ It should not feel like:
 
 > **“我调用了一份理论讲义。”**
 
-The Lens is successful when the theory becomes a stable **attention pattern**, not merely a visible list of concepts.
+The Lens is successful when a rich source-scoped model becomes a stable **attention structure with selective activation**, not merely a visible list of concepts.
+
+Final shorthand:
+
+> **Distill broadly. Activate selectively. Speak naturally.**
